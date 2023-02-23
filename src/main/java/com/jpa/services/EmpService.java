@@ -41,18 +41,24 @@ public class EmpService {
 	}
 	
 	public Employee attachAddress(Long empId, Long addressId) {
-		try {
+//		try {
+//			Employee emp = empRepo.findById(empId).get();
+//			try {
+//				Address num = addressRepo.findById(addressId).get();
+//				emp.setAddress(num);
+//				return empRepo.save(emp);
+//			} catch (Exception e) {
+//				return null;
+//			}
+//		} catch (Exception e) {
+//			return null;
+//		}
+
 			Employee emp = empRepo.findById(empId).get();
-			try {
 				Address num = addressRepo.findById(addressId).get();
 				emp.setAddress(num);
 				return empRepo.save(emp);
-			} catch (Exception e) {
-				return null;
-			}
-		} catch (Exception e) {
-			return null;
-		}
+
 	}
 	
 	public List<Employee> getLikeEmp(String pattern){

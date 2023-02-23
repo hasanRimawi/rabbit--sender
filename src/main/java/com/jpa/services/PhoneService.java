@@ -24,20 +24,26 @@ public class PhoneService {
 	}
 
 	public PhoneNumber attachEmployee(Long empId, Long phoneId) {
-		try {
-			Employee emp = empRepo.findById(empId).get();
-			try {
-				PhoneNumber num = phoneRepo.findById(phoneId).get();
-				num.setEmp(emp);
-				return phoneRepo.save(num);
-			} catch (Exception e) {
-				return null;
-			}
-		} catch (Exception e) {
-			return null;
-		}
+//		try {
+//			Employee emp = empRepo.findById(empId).get();
+//			try {
+//				PhoneNumber num = phoneRepo.findById(phoneId).get();
+//				num.setEmp(emp);
+//				return phoneRepo.save(num);
+//			} catch (Exception e) {
+//				return null;
+//			}
+//		} catch (Exception e) {
+//			return null;
+//		}
+
+		Employee emp = empRepo.findById(empId).get();
+
+		PhoneNumber num = phoneRepo.findById(phoneId).get();
+		num.setEmp(emp);
+		return phoneRepo.save(num);
 	}
-	
+
 	public void deletePhone(Long id) {
 		phoneRepo.deleteById(id);
 	}
