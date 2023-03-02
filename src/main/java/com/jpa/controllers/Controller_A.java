@@ -76,8 +76,8 @@ public class Controller_A {
 	}
 
 	@PutMapping(path = "/{empId}/phoneEmp/{phoneId}")
-	public ResponseEntity<PhoneNumber> linkNumber(@PathVariable Long empId, @PathVariable Long phoneId) {
-		return new ResponseEntity<PhoneNumber>(phoneService.attachEmployee((empId), (phoneId)),
+	public ResponseEntity<Employee> linkNumber(@PathVariable Long empId, @PathVariable Long phoneId) {
+		return new ResponseEntity<Employee>(phoneService.attachEmployee((empId), (phoneId)),
 				phoneService.attachEmployee((empId), (phoneId)) == null ? HttpStatus.NOT_FOUND : HttpStatus.ACCEPTED);
 	}
 
@@ -91,9 +91,8 @@ public class Controller_A {
 		phoneService.deletePhone(id);
 	}
 	
-	@DeleteMapping(path = "/deladd/{addid}/{empid}")
-	public void deleteAddress(@PathVariable Long addid, @PathVariable Long empid) {
-		empservice.deleteADDRESS(empid);
+	@DeleteMapping(path = "/deladd/{addid}")
+	public void deleteAddress(@PathVariable Long addid) {
 		addressService.deleteAddress(addid);
 	}
 

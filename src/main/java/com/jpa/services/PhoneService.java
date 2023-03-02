@@ -23,7 +23,7 @@ public class PhoneService {
 		return phoneRepo.save(num);
 	}
 
-	public PhoneNumber attachEmployee(Long empId, Long phoneId) {
+	public Employee attachEmployee(Long empId, Long phoneId) {
 //		try {
 //			Employee emp = empRepo.findById(empId).get();
 //			try {
@@ -40,8 +40,8 @@ public class PhoneService {
 		Employee emp = empRepo.findById(empId).get();
 
 		PhoneNumber num = phoneRepo.findById(phoneId).get();
-		num.setEmp(emp);
-		return phoneRepo.save(num);
+		emp.addNumber(num);
+		return empRepo.save(emp);
 	}
 
 	public void deletePhone(Long id) {

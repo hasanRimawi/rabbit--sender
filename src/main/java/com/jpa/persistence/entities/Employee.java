@@ -24,12 +24,20 @@ public class Employee {
 	private String lastName;
 	private String position;
 
-	@OneToMany(mappedBy = "emp", cascade = CascadeType.REMOVE) // here the remove is used so when the number entity is
-																// deleted, it doesn't remain in the emp entity
-																// and when the emp is deleted, then the number is also
-																// deleted
+//	@OneToMany(mappedBy = "emp", cascade = CascadeType.REMOVE) // here the remove is used so when the number entity is
+//																// deleted, it doesn't remain in the emp entity
+//																// and when the emp is deleted, then the number is also
+//																// deleted
+//	private List<PhoneNumber> phoneNumber;
+
+	@OneToMany(cascade = CascadeType.REMOVE) // here the remove is used so when the number entity is
+	// deleted, it doesn't remain in the emp entity
+	// and when the emp is deleted, then the number is also
+	// deleted
+	@JoinColumn(name = "phone_id", referencedColumnName = "id") // cancels the need of making another table in the
+																// relation but still there will be additional SQL
+																// statements to implement
 	private List<PhoneNumber> phoneNumber;
-//	private List<PhoneNumber> phoneNumber =  new ArrayList<PhoneNumber>();
 
 	@ManyToMany(mappedBy = "emps", cascade = CascadeType.PERSIST)
 	private Set<Car> cars;
@@ -37,7 +45,7 @@ public class Employee {
 	public Employee() {
 	}
 
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "address_id", referencedColumnName = "id")
 	private Address address;
 

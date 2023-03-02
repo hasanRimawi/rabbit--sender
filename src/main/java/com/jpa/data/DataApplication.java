@@ -1,6 +1,8 @@
 package com.jpa.data;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -42,7 +44,6 @@ public class DataApplication {
 			empR.save(new Employee("Hamody", "Mokbel", "QA"));
 			empR.save(new Employee("Bara", "Jabaly", "Mobile"));
 			empR.save(new Employee("Mohammed", "Balawi", "Back-End", new Address("Test Address")));
-			phoR.save(new PhoneNumber(Long.parseLong("0595894897"), has));
 			phoR.save(new PhoneNumber(Long.parseLong("0592512460")));
 			phoR.save(new PhoneNumber(Long.parseLong("0598351456")));
 			carR.save(new Car("BMW"));

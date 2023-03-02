@@ -16,7 +16,7 @@ import com.jpa.persistence.entities.Employee;
 public class EmpService {
 	@Autowired
 	private EmpRepo empRepo;
-	
+
 	@Autowired
 	private AddressRepo addressRepo;
 
@@ -35,42 +35,30 @@ public class EmpService {
 	public Long findCount() {
 		return empRepo.count();
 	}
-	
+
 	public void deleteEmp(Long id) {
 		empRepo.deleteById(id);
 	}
-	
-	public Employee attachAddress(Long empId, Long addressId) {
-//		try {
-//			Employee emp = empRepo.findById(empId).get();
-//			try {
-//				Address num = addressRepo.findById(addressId).get();
-//				emp.setAddress(num);
-//				return empRepo.save(emp);
-//			} catch (Exception e) {
-//				return null;
-//			}
-//		} catch (Exception e) {
-//			return null;
-//		}
 
-			Employee emp = empRepo.findById(empId).get();
-				Address num = addressRepo.findById(addressId).get();
-				emp.setAddress(num);
-				return empRepo.save(emp);
+	public Employee attachAddress(Long empId, Long addressId) {
+
+		Employee emp = empRepo.findById(empId).get();
+		Address num = addressRepo.findById(addressId).get();
+		emp.setAddress(num);
+		return empRepo.save(emp);
 
 	}
-	
-	public List<Employee> getLikeEmp(String pattern){
+
+	public List<Employee> getLikeEmp(String pattern) {
 		return empRepo.findByFirstNameLike(pattern);
 	}
-	
-	public Employee deleteADDRESS(Long id) {
-		Employee temp = empRepo.findById(id).get();
-		temp.setAddress(null);
-		return empRepo.save(temp);
-	}
-	
+
+//	public Employee deleteADDRESS(Long id) {
+//		Employee temp = empRepo.findById(id).get();
+//		temp.setAddress(null);
+//		return empRepo.save(temp);
+//	}
+
 //	public List<Employee> gett(Long empId){
 //		return empRepo.getThem(empId);
 //	}

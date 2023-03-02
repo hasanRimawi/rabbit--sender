@@ -1,12 +1,10 @@
 package com.jpa.persistence.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,10 +24,6 @@ public class Address {
 	public Address(String address) {
 		this.address = address;
 	}
-	
-	@JsonIgnore
-	@OneToOne(mappedBy = "address")
-	public Employee emp;
 
 	public Long getId() {
 		return id;
@@ -43,13 +37,6 @@ public class Address {
 		this.address = address;
 	}
 
-	public Employee getEmp() {
-		return emp;
-	}
-
-	public void setEmp(Employee emp) {
-		this.emp = emp;
-	}
 	
 	
 }

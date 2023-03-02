@@ -15,6 +15,7 @@ public interface EmpRepo extends JpaRepository<Employee, Long>{
 	@Query("SELECT t FROM Employee t WHERE t.firstName LIKE %:pattern%")
 	public List<Employee> findByFirstNameLike(@Param("pattern") String pattern);
 	
-//	@Query("SELECT e FROM Employee e, Address a WHERE :empId = e.id AND :empId = e.address_id")
-//	public List<Employee> getThem(@Param("empId") Long empId);
+	@Query(value = "SELECT * FROM Employee t where t.address_id = :addressId", nativeQuery = true)
+	public List<Employee> findByAddress(@Param("addressId") Long addressId);
+
 }
