@@ -99,7 +99,7 @@ public class Controller_A {
 	@GetMapping(path = "/cars")
 	public Iterable<Car> getCars() {
 		System.out.println("AFTER UPDATE");
-		System.out.println("HI");
+		System.out.println("H");
 		return carService.getCars();
 	}
 
