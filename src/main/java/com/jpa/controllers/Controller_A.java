@@ -98,6 +98,7 @@ public class Controller_A {
 
 	@GetMapping(path = "/cars")
 	public Iterable<Car> getCars() {
+		System.out.println("AFTER UPDATE");
 		return carService.getCars();
 	}
 
