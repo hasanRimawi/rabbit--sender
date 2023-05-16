@@ -1,17 +1,17 @@
 package com.jpa.data;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.jpa.persistence.AddressRepo;
 import com.jpa.persistence.CarRepo;
@@ -22,20 +22,21 @@ import com.jpa.persistence.entities.Car;
 import com.jpa.persistence.entities.Employee;
 import com.jpa.persistence.entities.PhoneNumber;
 
-@ComponentScan({"com.jpa.controllers","com.jpa.services"})
+@ComponentScan({ "com.jpa.controllers", "com.jpa.services" })
 @EntityScan("com.jpa.persistence.entities")
 @EnableJpaRepositories("com.jpa.persistence")
+//@EnableDiscoveryClient
 @SpringBootApplication
 public class DataApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataApplication.class, args);
-		
+
 	}
 
 	@Bean
 	CommandLineRunner cLR(EmpRepo empR, PhoneRepo phoR, CarRepo carR, AddressRepo addR) {
-		return args ->{
+		return args -> {
 			Set<Car> list1 = new HashSet<Car>();
 			list1.add(new Car("BMW"));
 			list1.add(new Car("MERCEDES"));
@@ -55,5 +56,10 @@ public class DataApplication {
 			addR.save(new Address("Jenin"));
 			addR.save(new Address("Gaza"));
 		};
+	}
+	
+	@Bean
+	public WebClient.Builder webClient() {
+		return WebClient.builder();
 	}
 }

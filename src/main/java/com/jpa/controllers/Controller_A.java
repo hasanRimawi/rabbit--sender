@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.jpa.persistence.entities.Address;
 import com.jpa.persistence.entities.Car;
@@ -24,6 +29,10 @@ import com.jpa.services.CarService;
 import com.jpa.services.EmpService;
 import com.jpa.services.PhoneService;
 
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
+
+@RequestMapping(path = "/ser")
 @RestController
 public class Controller_A {
 	@Autowired
@@ -37,21 +46,37 @@ public class Controller_A {
 
 	@Autowired
 	private AddressService addressService;
+
+	private RestTemplate restTemplate;
+
+	@Autowired
+	private WebClient.Builder webClient;
+
+	@Value("${server.port}")
+	private String port;
+
 	// body: {
 	// "id" = "..",
 	// "firstName" = "..",
 	// "lastName" = "..",
 	// "position" = ".."
 	// }
-	
-	@RequestMapping(path="/**")
-	public ResponseEntity<String> wrongPath(){
+
+	@RequestMapping(path = "/**")
+	public ResponseEntity<String> wrongPath() {
 		return new ResponseEntity<String>("Wrong URI entered", HttpStatus.BAD_REQUEST);
 	}
+
 	@PostMapping(value = "/addEmp")
 	public Employee addEmp(@RequestBody Employee emp) {
 		empservice.addUser(emp);
 		return emp;
+	}
+
+	@GetMapping(path = "/flux")
+	public Flux<String> flux() {
+		return webClient.build().get().uri("http://localhost:8085/api/stream").retrieve().bodyToFlux(String.class)
+				.subscribeOn(Schedulers.single());
 	}
 
 	@GetMapping(path = "/getemp/{id}")
@@ -62,7 +87,20 @@ public class Controller_A {
 
 	@GetMapping(path = "/getAllEmps")
 	public Iterable<Employee> getAll() {
+		System.out.println("this service port is: " + port);
+
+		try {
+			Thread.sleep(10 * 1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return empservice.getAll();
+	}
+
+	@GetMapping(path = "/getWord")
+	public ResponseEntity<String> getWord() {
+		return restTemplate.getForEntity("http://localhost:8085/api/getAll", String.class);
 	}
 
 	@GetMapping(path = "/phoneNumbers")
@@ -90,7 +128,7 @@ public class Controller_A {
 	public void deleteNum(@PathVariable Long id) {
 		phoneService.deletePhone(id);
 	}
-	
+
 	@DeleteMapping(path = "/deladd/{addid}")
 	public void deleteAddress(@PathVariable Long addid) {
 		addressService.deleteAddress(addid);
@@ -109,27 +147,26 @@ public class Controller_A {
 				carService.attachEmployee(empId, carId) != null ? carService.attachEmployee(empId, carId) : null,
 				carService.attachEmployee(empId, carId) == null ? HttpStatus.NOT_FOUND : HttpStatus.ACCEPTED);
 	}
-	
+
 	@GetMapping(path = "/addresses")
-	public Iterable<Address> getAddresses(){
+	public Iterable<Address> getAddresses() {
 		return addressService.getAddresses();
 	}
-	
+
 	@GetMapping(path = "/getAddress/{addressId}")
 	public Optional<Address> getAddress(@PathVariable Long addressId) {
 		return addressService.getAddress(addressId);
 	}
-	
+
 	@PutMapping(path = "/attachAddressToEmp/{addressId}/{empId}")
-	public ResponseEntity<Employee> linkAddress(@PathVariable Long addressId, @PathVariable Long empId){
+	public ResponseEntity<Employee> linkAddress(@PathVariable Long addressId, @PathVariable Long empId) {
 		return new ResponseEntity<Employee>(empservice.attachAddress(empId, addressId),
 				empservice.attachAddress(empId, addressId) == null ? HttpStatus.NOT_FOUND : HttpStatus.ACCEPTED);
 	}
-	
+
 	@GetMapping(path = "/alikeEmp/{pattern}")
-	public List<Employee> getAlike(@PathVariable String pattern){
+	public List<Employee> getAlike(@PathVariable String pattern) {
 		return empservice.getLikeEmp(pattern);
 	}
-	
-	
+
 }
