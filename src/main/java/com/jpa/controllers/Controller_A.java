@@ -28,6 +28,7 @@ import com.jpa.services.AddressService;
 import com.jpa.services.CarService;
 import com.jpa.services.EmpService;
 import com.jpa.services.PhoneService;
+import com.jpa.services.RabbitSender;
 
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
@@ -51,6 +52,9 @@ public class Controller_A {
 
 	@Autowired
 	private WebClient.Builder webClient;
+	
+	@Autowired
+	private RabbitSender rabbitService;
 
 	@Value("${server.port}")
 	private String port;
@@ -71,6 +75,11 @@ public class Controller_A {
 	public Employee addEmp(@RequestBody Employee emp) {
 		empservice.addUser(emp);
 		return emp;
+	}
+	@GetMapping(path="/rabbit/{routingKey}/{identifier}")
+	public String sendIt(@PathVariable String routingKey, @PathVariable String identifier) {
+		rabbitService.send(routingKey, identifier);
+		return "Message was sent";
 	}
 
 	@GetMapping(path = "/flux")

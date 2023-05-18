@@ -22,7 +22,7 @@ import com.jpa.persistence.entities.Car;
 import com.jpa.persistence.entities.Employee;
 import com.jpa.persistence.entities.PhoneNumber;
 
-@ComponentScan({ "com.jpa.controllers", "com.jpa.services" })
+@ComponentScan({ "com.jpa.controllers", "com.jpa.services", "com.jpa.configs"})
 @EntityScan("com.jpa.persistence.entities")
 @EnableJpaRepositories("com.jpa.persistence")
 //@EnableDiscoveryClient
