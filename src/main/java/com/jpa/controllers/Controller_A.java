@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import com.jpa.services.PhoneService;
 import com.jpa.services.RabbitSender;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 @RequestMapping(path = "/ser")
@@ -76,10 +78,13 @@ public class Controller_A {
 		empservice.addUser(emp);
 		return emp;
 	}
-	@GetMapping(path="/rabbit/{routingKey}/{identifier}")
-	public String sendIt(@PathVariable String routingKey, @PathVariable String identifier) {
-		rabbitService.send(routingKey, identifier);
-		return "Message was sent";
+	@GetMapping(path="/rabbit/{routingKey1}/{routingKey2}/{identifier}")
+	public String sendIt(@PathVariable String routingKey1, @PathVariable String routingKey2, @PathVariable String identifier) {
+		rabbitService.sendEmployees(routingKey1, routingKey2);
+		System.out.println("after requesting employees: " + Thread.currentThread().getId());
+		rabbitService.send(routingKey1, identifier);
+		System.out.println("after requesting msg: " + Thread.currentThread().getId());
+		return "DONE";
 	}
 
 	@GetMapping(path = "/flux")
@@ -96,10 +101,12 @@ public class Controller_A {
 
 	@GetMapping(path = "/getAllEmps")
 	public Iterable<Employee> getAll() {
+		System.out.println("GetAllEmps: " + Thread.currentThread().getId());
+
 		System.out.println("this service port is: " + port);
 
 		try {
-			Thread.sleep(10 * 1000);
+			Thread.sleep(5 * 1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

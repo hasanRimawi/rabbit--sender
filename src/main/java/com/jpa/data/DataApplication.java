@@ -2,7 +2,9 @@ package com.jpa.data;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Executor;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +13,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.jpa.persistence.AddressRepo;
@@ -62,4 +65,15 @@ public class DataApplication {
 	public WebClient.Builder webClient() {
 		return WebClient.builder();
 	}
+	
+	@Bean
+	  public Executor taskExecutor() {
+	    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+	    executor.setCorePoolSize(2);
+	    executor.setMaxPoolSize(2);
+	    executor.setQueueCapacity(500);
+	    executor.setThreadNamePrefix("GithubLookup-");
+	    executor.initialize();
+	    return executor;
+	  }
 }
